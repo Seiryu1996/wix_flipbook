@@ -1,41 +1,53 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="UTF-8">
-  <title>Flipbook</title>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/4.1.0/turn.min.js"></script>
-  <style>
-    #flipbook {
-      width: 800px;
-      height: 500px;
-      margin: 0 auto;
-    }
-    .page {
-      width: 400px;
-      height: 500px;
-      background-color: white;
-      border: 1px solid #ccc;
-      text-align: center;
-      line-height: 500px;
-      font-size: 24px;
-    }
-  </style>
-</head>
-<body>
-  <div id="flipbook">
-    <div class="page">1ページ</div>
-    <div class="page">2ページ</div>
-    <div class="page">3ページ</div>
-    <div class="page">4ページ</div>
-  </div>
-
-  <script>
-    $('#flipbook').turn({
-      width: 800,
-      height: 500,
-      autoCenter: true
-    });
-  </script>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <title>Flipbook</title>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script type="text/javascript" src="turn.min.js"></script>
+        <style type="text/css">
+            body{
+                background:#ccc;
+            }
+            #magazine{
+                width:1152px;
+                height:752px;
+            }
+            #magazine .turn-page{
+                background-color:#ccc;
+                background-size:100% 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="magazine">
+            <div style="background-image:url(pages/01.jpg);"></div>
+            <div style="background-image:url(pages/02.jpg);"></div>
+            <div style="background-image:url(pages/03.jpg);"></div>
+            <div style="background-image:url(pages/04.jpg);"></div>
+            <div style="background-image:url(pages/05.jpg);"></div>
+            <div style="background-image:url(pages/06.jpg);"></div>
+        </div>
+        <script type="text/javascript">
+            $(window).ready(function() {
+                $('#magazine').turn({
+                                    display: 'double',
+                                    acceleration: true,
+                                    gradients: !$.isTouch,
+                                    elevation:50,
+                                    when: {
+                                        turned: function(e, page) {
+                                            /*console.log('Current view: ', $(this).turn('view'));*/
+                                        }
+                                    }
+                                });
+            });
+            $(window).bind('keydown', function(e){
+                if (e.keyCode==37)
+                    $('#magazine').turn('previous');
+                else if (e.keyCode==39)
+                    $('#magazine').turn('next');
+            });
+        </script>
+    </body>
 </html>
