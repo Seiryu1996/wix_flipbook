@@ -6,12 +6,25 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script type="text/javascript" src="turn.min.js"></script>
         <style type="text/css">
-            body{
-                background:#ccc;
+            html, body {
+                margin: 0;
+                padding: 0;
+                height: 100%;
+                background: #ccc;
+                overflow: hidden;
+            }
+            #magazine-container {
+                position: relative;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
             }
             #magazine{
+                position: absolute;
                 width:1152px;
                 height:752px;
+                transform-origin: center center;
+                transition: transform 0.2s ease;
             }
             #magazine .turn-page{
                 background-color:#ccc;
@@ -20,27 +33,39 @@
         </style>
     </head>
     <body>
-        <div id="magazine">
-            <div style="background-image:url(pages/01.jpg);"></div>
-            <div style="background-image:url(pages/02.jpg);"></div>
-            <div style="background-image:url(pages/03.jpg);"></div>
-            <div style="background-image:url(pages/04.jpg);"></div>
-            <div style="background-image:url(pages/05.jpg);"></div>
-            <div style="background-image:url(pages/06.jpg);"></div>
+        <div id="magazine-container">
+            <div id="magazine">
+                <div style="background-image:url(pages/01.jpg);"></div>
+                <div style="background-image:url(pages/02.jpg);"></div>
+                <div style="background-image:url(pages/03.jpg);"></div>
+                <div style="background-image:url(pages/04.jpg);"></div>
+                <div style="background-image:url(pages/05.jpg);"></div>
+                <div style="background-image:url(pages/06.jpg);"></div>
+            </div>
         </div>
         <script type="text/javascript">
+            function scaleMagazine() {
+                const container = document.getElementById('magazine-container');
+                const magazine = document.getElementById('magazine');
+                const baseWidth = 1152;
+                const baseHeight = 752;
+                const scaleX = container.clientWidth / baseWidth;
+                const scaleY = container.clientHeight / baseHeight;
+                const scale = Math.min(scaleX, scaleY);
+                magazine.style.transform = `scale(${scale})`;
+                const offsetX = (container.clientWidth - baseWidth * scale) / 2 - 320;
+                const offsetY = (container.clientHeight - baseHeight * scale) / 2 - 200;
+                magazine.style.left = `${offsetX}px`;
+                magazine.style.top = `${offsetY}px`;
+            }
             $(window).ready(function() {
                 $('#magazine').turn({
-                                    display: 'double',
-                                    acceleration: true,
-                                    gradients: !$.isTouch,
-                                    elevation:50,
-                                    when: {
-                                        turned: function(e, page) {
-                                            /*console.log('Current view: ', $(this).turn('view'));*/
-                                        }
-                                    }
-                                });
+                    display: 'double',
+                    acceleration: true,
+                    gradients: !$.isTouch,
+                    elevation:50,
+                });
+                scaleMagazine();
             });
             $(window).bind('keydown', function(e){
                 if (e.keyCode==37)
@@ -48,6 +73,7 @@
                 else if (e.keyCode==39)
                     $('#magazine').turn('next');
             });
+            window.addEventListener('resize', scaleMagazine);
         </script>
     </body>
 </html>
